@@ -2,20 +2,19 @@ import cv2
 import rospy
 import roslib
 import time
-import Image
 from std_msgs.msg import Bool
 from cv_bridge import CvBridge, CvBridgeError
 from sensor_msgs.msg import Image
 
 class Face_Service():
 	def __init__(self):
-		self.image_topic = rospy.get_param('~image_topic', '/camera/image_raw')
+		#self.image_topic = rospy.get_param('~image_topic', '/camera/image_raw')
 
 		self.bridge = CvBridge()
-		self.image_sub = rospy.Subscriber(image_topic, Image, self.image_callback, queue_size = 1)
+		self.image_sub = rospy.Subscriber("/camera/rgb/image_raw", Image, self.image_callback, queue_size = 1)
 		self.face_pub = rospy.Publisher("/faces", Image, self.image_callback, queue_size = 10)
-		self.enabled = rospy.get_param('~enabled', True)
-                self.cv_window = rospy.get_param('~show_cv_window', True)
+		self.enabled = True #rospy.get_param('~enabled', True)
+                self.cv_window = True #rospy.get_param('~show_cv_window', True)
 
 	def image_callback(self, image):
 		if not self.enabled:
@@ -31,7 +30,6 @@ class Face_Service():
                     print e
 
 	def status_callback(self, status):
-		self.status
                 if self.enabled:
                     rospy.loginfo("Face detection enabled")
                 else:
