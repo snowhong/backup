@@ -1,5 +1,8 @@
+#!/usr/bin/env python
 import cv2
 import rospy
+import os
+import sys
 import roslib
 import time
 from std_msgs.msg import Bool
@@ -8,52 +11,43 @@ from sensor_msgs.msg import Image
 
 class Face_Service():
 	def __init__(self):
-		#self.image_topic = rospy.get_param('~image_topic', '/camera/image_raw')
-
 		self.bridge = CvBridge()
 		self.image_sub = rospy.Subscriber("/camera/rgb/image_raw", Image, self.image_callback, queue_size = 1)
-		self.face_pub = rospy.Publisher("/faces", Image, self.image_callback, queue_size = 10)
-		self.enabled = True #rospy.get_param('~enabled', True)
-                self.cv_window = True #rospy.get_param('~show_cv_window', True)
+		self.cascPath = os.path.join("/home/robot/Robot/src/backup/ros_kit/skk/config/","haarcascade_frontalface_default.xml")
+		self.faceCascade = cv2.CascadeClassifier(self.cascPath)
 
 	def image_callback(self, image):
-		if not self.enabled:
-			return
 		try:
                     cv_image = self.bridge.imgmsg_to_cv2(image, "bgr8")
-                    detection = self.detect_faces(cv_image, self.cv_window)
-                    #if len(detection) > 0:
-                    if self.cv_window:
-                        cv2.imshow(CV_WINDOW_TITLE, cv_image)
-                        cv.waitKey(1)
+                    detection = self.detect_faces(cv_image)
+		    for (x, y, w, h) in detection:
+		    	cv2.rectangle(cv_image, (x, y), (x+w, y+h), (0, 255, 0), 2)
+
+                    cv2.imshow("Face", cv_image)
+                    cv2.waitKey(1)
                 except CvBridgeError, e:
                     print e
 
-	def status_callback(self, status):
-                if self.enabled:
-                    rospy.loginfo("Face detection enabled")
-                else:
-                    rospy.loginfo("Face detection disabled")
-
-	def detect_face(self, image, draw=False):
-		#Parameters
+	def detect_faces(self, image):
 		_scale_Factor=1.2
-		_min_Neighbour=2
-		_min_Size=(20,20)
+		_min_Neighbor=5
+		_min_Size=(30,30)
 	        flags = cv2.cv.CV_HAAR_SCALE_IMAGE
 		gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-		faces=faceCascade.detectMultiScale(
-				gray,
-				_scale_Factor,
-				_min_Neighboru,
-				_min_Size,
-				flags
-				)
-		print "face found".format(len(faces))
-                return 
+		#faces=self.faceCascade.detectMultiScale(gray, _scale_Factor, _min_Neighbor, flags, _min_Size)
+
+		faces = self.faceCascade.detectMultiScale(
+			gray,
+			scaleFactor=1.1,
+			minNeighbors=5,
+			minSize=(30, 30),
+			flags=cv2.cv.CV_HAAR_SCALE_IMAGE
+			)
+
+                return faces
 
 if __name__ == '__main__':
 	rospy.init_node('face_srv')
-	fd = Face_Service
+	fd = Face_Service()
 	rospy.spin()

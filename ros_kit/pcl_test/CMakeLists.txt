@@ -132,7 +132,7 @@ include_directories(
 
 ## Declare a C++ executable
 # add_executable(pcl_test_node src/pcl_test_node.cpp)
-add_executable(tt src/tt.cpp)
+#add_executable(tt src/tt.cpp)
 #add_executable(people src/people_detection.cpp)
 
 ## Add cmake target dependencies of the executable
@@ -140,9 +140,9 @@ add_executable(tt src/tt.cpp)
 # add_dependencies(pcl_test_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
- target_link_libraries(tt 
-   ${catkin_LIBRARIES}
- )
+# target_link_libraries(tt 
+#   ${catkin_LIBRARIES}
+# )
 
 #############
 ## Install ##
