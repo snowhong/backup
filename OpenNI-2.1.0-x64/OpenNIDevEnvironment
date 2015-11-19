@@ -1,0 +1,2 @@
+export OPENNI2_INCLUDE=/home/robot/Documents/driver/OpenNI-2.1.0-x64/Include
+export OPENNI2_REDIST=/home/robot/Documents/driver/OpenNI-2.1.0-x64/Redist
