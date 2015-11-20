@@ -2,11 +2,15 @@
 import os
 import sys
 import ctypes
+import rospy
+import rospack
 from primesense import openni2
 from primesense import nite2
 
 nite2.initialize()
 ut=nite2.UserTracker.open_any()
+#rospack.get_path()
+
 while(1):
 	frame = ut.read_frame()
 	depth_frame = frame.get_depth_frame()
@@ -19,7 +23,8 @@ while(1):
 		head = users.skeleton.joints[0]
 		if(head.positionConfidence > 0.5):
 		    print fu.id
-		    print head.position.x
-		    print head.position.y
-		    print head.position.z
+		    print head.position.x/1000.0
+		    print head.position.y/1000.0
+		    #Depth direction
+		    print head.position.z/1000.0
 

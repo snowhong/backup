@@ -1,10 +1,3 @@
-/*******************************************************************************
-*                                                                              *
-*   PrimeSense NiTE 2.0 - Simple Skeleton Sample                               *
-*   Copyright (C) 2012 PrimeSense Ltd.                                         *
-*                                                                              *
-*******************************************************************************/
-
 #include "NiTE.h"
 
 #include "NiteSampleUtilities.h"
