@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+import os
+import sys
+import ctypes
+from primesense import openni2
+from primesense import nite2
+
+nite2.initialize()
+ut=nite2.UserTracker.open_any()
+while(1):
+	frame = ut.read_frame()
+	depth_frame = frame.get_depth_frame()
+	for fu in frame.users:
+	    users = fu
+	    if users.is_new():
+		ut.start_skeleton_tracking(fu.id)
+		print users.skeleton.state
+	    elif users.skeleton.state == 2:
+		head = users.skeleton.joints[0]
+		if(head.positionConfidence > 0.5):
+		    print fu.id
+		    print head.position.x
+		    print head.position.y
+		    print head.position.z
+
